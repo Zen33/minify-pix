@@ -1,11 +1,24 @@
 {
   "name": "minify-pix",
-  "version": "1.1.0",
+  "version": "1.1.2",
   "description": "A Node.js module for optimizing image file size. It can be used independently or configured to detect image files in git areas, providing the ability to compress and optimize them at code commit time.",
+  "keywords": [
+    "Image optimization",
+    "Image file size reduction",
+    "Image compression",
+    "Optimize images in Git",
+    "Image compression at code commit time",
+    "Image optimization module",
+    "Git image file compression"
+  ],
   "main": "index.js",
   "license": "MIT",
   "bin": {
     "minify": "index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Zen33/minify-pix"
   },
   "scripts": {
     "minify": "./index.js",

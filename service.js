@@ -43,7 +43,7 @@ class Service {
   async optimizeFilesFromDirectory(directory, excludePatterns = ['node_modules']) {
     const files = await new fdir()
       .withFullPaths()
-      .exclude(dir => dir.startsWith('.') || excludePatterns.some(pattern => dir.includes(pattern)))
+      .exclude(dir => excludePatterns.some(pattern => dir.includes(pattern)))
       .crawl(directory)
       .withPromise()
 
@@ -92,13 +92,7 @@ class Service {
       }
     }
 
-    const results = await Promise.allSettled(imageFiles.map(optimizeFile))
-
-    results.forEach(result => {
-      if (result.status === 'rejected') {
-        failedFiles.push(result.reason)
-      }
-    })
+    await Promise.allSettled(imageFiles.map(optimizeFile))
 
     if (successCount === 0) {
       this.spinner.stop()
