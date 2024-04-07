@@ -1,0 +1,28 @@
+{
+  "name": "minify-pix",
+  "version": "1.1.0",
+  "description": "A Node.js module for optimizing image file size. It can be used independently or configured to detect image files in git areas, providing the ability to compress and optimize them at code commit time.",
+  "main": "index.js",
+  "license": "MIT",
+  "bin": {
+    "minify": "index.js"
+  },
+  "scripts": {
+    "minify": "./index.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "fdir": "^6.1.1",
+    "imagemin": "^7.0.1",
+    "imagemin-gifsicle": "^7.0.0",
+    "imagemin-mozjpeg": "^9.0.0",
+    "imagemin-pngquant": "^9.0.2",
+    "imagemin-svgo": "^9.0.0",
+    "ora": "^5.4.1",
+    "simple-git": "^3.22.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
