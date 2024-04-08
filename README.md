@@ -67,7 +67,7 @@ npx husky add .husky/pre-commit "npx minify"
 npx minify
 
 git diff --cached --name-only --diff-filter=ACMRTUXB | egrep "\.(png|gif|jpeg|jpg|svg)$" | while IFS= read -r file;do
-    git add "$file"
+  git add "$file"
 done
 ```
 
@@ -75,9 +75,9 @@ done
 
 ```json
 "minifyPix": {
-    "png": {
-        "quality": [0.6, 0.8]
-    }
+  "png": {
+    "quality": [0.6, 0.8]
+  }
 }
 ```
 ```js
@@ -90,11 +90,31 @@ const DEFAULT_PLUGIN_CONFIG = {
 
 现在，每次提交代码时，MinifyPix 都会自动优化暂存区中的图像文件。
 
-## ⚙️ 配置（TODO）
+## ⚙️ 配置
 
-MinifyPix 支持多种优化选项，您可以在运行时传递参数或在项目根目录下创建 `.minifypixrc` 文件进行配置。
+MinifyPix 支持多种优化选项，您可以在运行时传递参数或在项目根目录下创建 `minifyPix.config.js` 文件进行配置。
 
-更多详细信息，请参阅 [代码仓](https://gitlab.dev.zhaopin.com/RD/tools/minify-pix)。
+在 `minifyPix.config.js` 中，您可以配置以下选项：
+
+- `destination` （字符串）：指定要优化的图像文件所在的本地目录相对路径。（当设置此项后将不会再从Git的状态中提取图片）
+- `exclude` (数组)：指定要排除的目录或文件，通常用于排除 `node_modules`（默认） 目录。
+- `target` (字符串)：指定优化后的图像文件输出目录相对路径。如果未指定，则会覆盖原始文件。
+- 其他插件选项，例如 `jpg`、`png`、`gif` 等，用于自定义各种图像格式的优化参数。
+
+例如:
+
+```js
+module.exports = {
+  destination: './src',
+  exclude: ['node_modules', '.hidden'],
+  target: './static',
+  png: {
+    quality: [0.6, 0.8]
+  }
+}
+```
+
+更多详细信息，请参阅 [代码私仓](https://gitlab.dev.zhaopin.com/RD/tools/minify-pix)，或者[Github](https://github.com/Zen33/minify-pix)。
 
 ## 📄 许可证
 

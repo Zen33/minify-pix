@@ -1,25 +1,31 @@
 const { resolve, extname } = require('path')
+const fs = require('fs')
 const ora = require('ora')
 const chalk = require('chalk')
 const simpleGit = require('simple-git')
 const { fdir } = require('fdir')
+const minimist = require('minimist')
 const MinifyPix = require('./base')
 
 const DEFAULT_IMAGE_TYPES = ['.jpg', '.jpeg', '.png', '.gif', '.svg']
 const IMAGE_TYPES_REGEX = /\.(jpe?g|png|gif|svg)$/i
+const CONFIG_FILE = 'minifyPix.config.js'
 
 class Service {
-  constructor(pkgJson) {
-    const rootPkg = pkgJson || require(resolve(process.cwd(), 'package.json'))
+  constructor(config) {
+    const pkgJson = require(resolve(__dirname, 'package.json'))
+    const rootPkg = config || require(resolve(process.cwd(), 'package.json'))
+    const configFile = resolve(process.cwd(), CONFIG_FILE)
 
-    this.config = rootPkg.minifyPix || {}
+    this.config = fs.existsSync(configFile) ? require(configFile) : rootPkg.minifyPix || {}
+    this.version = pkgJson?.version
     this.imageTypes = this.getImageTypes(this.config.imageTypes)
     this.minifyPix = new MinifyPix(this.config)
     this.spinner = ora('Optimizing images...').start()
   }
 
   filterImageFiles(files = []) {
-    return files.filter(file => IMAGE_TYPES_REGEX.test(extname(file)))
+    return files?.filter(file => IMAGE_TYPES_REGEX.test(extname(file)))
   }
 
   getImageTypes(types) {
@@ -55,6 +61,13 @@ class Service {
     let successCount = 0
     let totalSaving = 0
     const failedFiles = []
+    const args = minimist(process.argv.slice(2))
+
+    if (args.version) {
+      this.spinner.info(this.version)
+      this.spinner.stop()
+      return
+    }
 
     config = config || this.config || {}
     if (config.destination) {

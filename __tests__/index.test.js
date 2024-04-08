@@ -31,7 +31,8 @@ jest.mock('fs', () => ({
   readdir: jest.fn((path, options, callback) => {
     // 根据需要模拟 readdir 的行为
     callback(null, [])
-  })
+  }),
+  existsSync: jest.fn()
 }))
 jest.mock('imagemin', () => jest.fn().mockResolvedValue({}))
 jest.mock('imagemin-mozjpeg', () => jest.fn().mockResolvedValue({}))
@@ -665,6 +666,17 @@ describe('Service', () => {
       })
 
       expect(failedFiles).toHaveLength(0)
+    })
+
+    it('should print version and stop spinner when --version flag is provided', async () => {
+      process.argv = ['node', 'minify', '--version']
+      const infoSpy = jest.spyOn(service.spinner, 'info')
+      const stopSpy = jest.spyOn(service.spinner, 'stop')
+
+      await service.start()
+
+      expect(infoSpy).toHaveBeenCalledWith(service.version)
+      expect(stopSpy).toHaveBeenCalled()
     })
   })
 })
